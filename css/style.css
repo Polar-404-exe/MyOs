@@ -1,0 +1,25 @@
+body{
+    background-image: url(../img/sfondo.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+     background-size: cover;
+}
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    align-items: center;
+    background-color: #b0ffefae;
+    width: 400px;
+    height: 300px;
+    padding: 00px;
+    border-radius: 25px;
+    border: 2px solid  #83c9bb7d;
+}
+
+.container h1 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
