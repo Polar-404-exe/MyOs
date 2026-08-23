@@ -9,27 +9,48 @@
   </head>
 
   <body>
-    <div class="container">
-      <h1>Hi welcome to my WebOS</h1>
-      <h2 style="text-align: left;">I like:</h2>
-      <ul style="text-align: left;">
-        <li>music
-          <ul>
-            <li>rap</li>
-            <li>rock</li>
-            <li>pop</li>
-          </ul>
-        </li>
-        <li>programming
-          <ul>
-            <li>html</li>
-            <li>css</li>
-            <li>javascript</li>
-            <li>python</li>
-          </ul>
-        </li>
-        <li>playing drums</li>
-      </ul>
+    <div class="topbar">
+      <p style="margin-left: 0; background-color: rgba(187, 187, 187, 0.5); padding: 5px; border-radius: 22px; padding-left: 10px; padding-right: 10px;">
+
+            PolarOS
+
+      </p>
+
+       <p style="text-align: center; position: absolute;left: 50%; transform: translateX(-50%); white-space: nowrap; background-color: rgba(187, 187, 187, 0.5); padding: 5px 10px; border-radius: 22px; padding-left: 10px; padding-right: 10px;">
+
+            Be creative💡
+
+      </p>
+
+      
+      <p id="timeElement" style="margin-left: 40%; background-color: rgba(187, 187, 187, 0.5); padding: 5px; border-radius: 22px; padding-left: 10px; padding-right: 10px;">
+
+            Time
+
+      </p>
+      
     </div>
+    <div class="container">
+      <h1>Hi welcome to PolarOS</h1>
+      <h2 style="text-align: left; font-family: 'URW Chancery L', cursive; font-weight: 50">PolarOS is a feature-limited OS to answer the unanswerable questions of "who is Polar?"</h2>
+      
+    </div>
+    <script>
+
+
+      function updateTime() {
+              var currentTime = new Date().toLocaleString();
+
+              var timeText = document.querySelector("#timeElement")
+
+              timeText.innerHTML = currentTime 
+      
+      }
+      
+      updateTime();
+      setInterval(updateTime, 1000);
+
+      
+    </script>
   </body>
 </html>
