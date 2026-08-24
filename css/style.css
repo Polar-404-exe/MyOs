@@ -5,9 +5,14 @@ body{
     background-attachment: fixed;
     background-size: cover;
 }
-.container {
+.welcome {
     border: solid;
-    width: 400px;
+    width: 360px;
+    height: 200px;
+    box-sizing: border-box;
+    flex-direction: column;
+    display: flex;
+    min-height: 0px;
     padding: 6px;
     position: absolute;
     top: 50%;
@@ -18,6 +23,24 @@ body{
     border-color: rgba(0, 0, 0, 0.646);
 }
 
+#welcomeheader {
+    height: 35px;
+    border-radius: 22px;
+    flex: 0 0 10px;
+    min-height: 25px;
+    margin: -6px -6px 0px;
+    background-color: rgba(255, 255, 255, 0.25);
+    border-color: rgba(0, 0, 0, 0.646);
+    box-sizing: border-box; 
+}
+
+.welcome h1 {
+    margin: 0 0 1px;
+}
+   
+.welcome h2 {
+    margin: 0;
+}
 .topbar {
     display: flex;
     background-color: rgba(0, 0, 0, 0.5);
