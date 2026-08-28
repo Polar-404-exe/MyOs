@@ -65,3 +65,43 @@ body{
     padding-right: 4px;
     padding-left: 4px;
 }
+#desktopApps {
+    padding-top: 64px;
+    padding-left: 16px;
+}
+
+.addCSS {
+    background-color: rgba(75, 192, 255, 0.742);
+    border-color: rgb(0, 52, 103);
+    border-radius: 12px;
+}
+
+.buttonapp img.addCSS {
+    border: 2px solid rgb(0, 52, 103);
+    box-sizing: 32px;
+}
+
+.buttonapp {
+    background: none;     
+    border: none;         
+    padding: 0;           
+    font: inherit;
+    color: inherit;       
+    cursor: pointer;
+    outline: inherit;
+    position: absolute;
+    top: 64px;
+    left: 16px;
+}
+.selected {
+    width: 32px;
+    height: 32px;
+    display: block;
+    background-color: rgba(254, 254, 254, 0.5);
+    padding: 22px;
+    border-radius: 12px;
+}
+
+.app {
+    margin: 0;
+}
