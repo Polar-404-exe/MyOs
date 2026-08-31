@@ -1,76 +1,94 @@
-// Make the DIV element draggable:
-dragElement(document.getElementById("welcome"));
+class Window {
+  constructor(elementSelector, openTriggerSelector, closeTriggerSelector) {
+    this.element = document.querySelector(elementSelector);
+    this.openTrigger = document.querySelector(openTriggerSelector);
+    this.closeTrigger = this.element ? this.element.querySelector(closeTriggerSelector) : null;
 
-function dragElement(elmnt) {
-  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-  if (document.getElementById(elmnt.id + "header")) {
-    // if present, the header is where you move the DIV from:
-    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
-  } else {
-    // otherwise, move the DIV from anywhere inside the DIV:
-    elmnt.onmousedown = dragMouseDown;
+    this.pos1 = 0;
+    this.pos2 = 0;
+    this.pos3 = 0;
+    this.pos4 = 0;
+
+    this.dragHandler = this.drag.bind(this);
+    this.stopDragHandler = this.stopDrag.bind(this);
+
+    this.init();
   }
 
-  function dragMouseDown(e) {
-    e = e || window.event;
-    e.preventDefault();
-    // get the mouse cursor position at startup:
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = closeDragElement;
-    // call a function whenever the cursor moves:
-    document.onmousemove = elementDrag;
+  init() {
+    if (!this.element) return;
+
+    if (this.openTrigger) {
+      this.openTrigger.addEventListener("click", () => this.open());
+    }
+
+    if (this.closeTrigger) {
+      this.closeTrigger.addEventListener("click", () => this.close());
+    }
+
+    this.makeDraggable();
   }
 
-  function elementDrag(e) {
-    e = e || window.event;
-    e.preventDefault();
-    // calculate the new cursor position:
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    // set the element's new position:
-    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+  open() {
+    this.element.style.display = "flex";
   }
 
-  function closeDragElement() {
-    // stop moving when mouse button is released:
-    document.onmouseup = null;
-    document.onmousemove = null;
+  close() {
+    this.element.style.display = "none";
+  }
+
+  makeDraggable() {
+    const handle = this.element.querySelector(".header") || this.element;
+
+    handle.addEventListener("mousedown", (event) => {
+      event.preventDefault();
+
+      this.pos3 = event.clientX;
+      this.pos4 = event.clientY;
+
+      document.addEventListener("mousemove", this.dragHandler);
+      document.addEventListener("mouseup", this.stopDragHandler);
+    });
+  }
+
+  drag(event) {
+    event.preventDefault();
+
+    this.pos1 = this.pos3 - event.clientX;
+    this.pos2 = this.pos4 - event.clientY;
+    this.pos3 = event.clientX;
+    this.pos4 = event.clientY;
+
+    this.element.style.top = (this.element.offsetTop - this.pos2) + "px";
+    this.element.style.left = (this.element.offsetLeft - this.pos1) + "px";
+  }
+
+  stopDrag() {
+    document.removeEventListener("mousemove", this.dragHandler);
+    document.removeEventListener("mouseup", this.stopDragHandler);
   }
 }
-var welcomeScreen = document.querySelector("#welcome")
-function closeWindow(element) {
-  element.style.display = "none"
-}
-function openWindow(element) {
-  element.style.display = "flex"
-}
-var welcomeScreenClose = document.querySelector("#welcomeclose")
 
-var welcomeScreenOpen = document.querySelector("#welcomeopen")
-welcomeScreenClose.addEventListener("click", function() {
-  closeWindow(welcomeScreen);
-});
+const welcomeWindow = new Window("#welcome", "#welcomeopen", ".close");
 
-welcomeScreenOpen.addEventListener("click", function() {
-  openWindow(welcomeScreen);
-});
+var selectedIcon = null;
 
+function selectIcon(element) {
+  if (selectedIcon === element) {
+    deselectIcon(selectedIcon);
+    return;
+  }
 
-var selectedIcon = undefined;
-
-function selectIcon (element) {
-  if (selectedIcon && selectedIcon !== element) {
+  if (selectedIcon) {
     deselectIcon(selectedIcon);
   }
+
   element.classList.add("selected");
-  selectedIcon = element
+  selectedIcon = element;
 }
 
 function deselectIcon(element) {
+  if (!element) return;
   element.classList.remove("selected");
-  selectedIcon = undefined
+  selectedIcon = null;
 }
