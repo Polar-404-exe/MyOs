@@ -70,8 +70,9 @@ class Window {
 }
 
 const welcomeWindow = new Window("#welcome", "#welcomeopen", ".close");
+const music = new Window("#music","#music", ".close");
 
-var selectedIcon = null;
+var selectedIcon = null;    
 
 function selectIcon(element) {
   if (selectedIcon === element) {
