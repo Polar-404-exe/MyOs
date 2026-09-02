@@ -1,13 +1,13 @@
 class Window {
-  constructor(elementSelector, openTriggerSelector, closeTriggerSelector) {
+  constructor(elementSelector, openTriggerSelector, closeTriggerSelector, openEvent = "click") {
     this.element = document.querySelector(elementSelector);
     this.openTrigger = document.querySelector(openTriggerSelector);
     this.closeTrigger = this.element ? this.element.querySelector(closeTriggerSelector) : null;
+    this.openEvent = openEvent;
 
-    this.pos1 = 0;
-    this.pos2 = 0;
-    this.pos3 = 0;
-    this.pos4 = 0;
+    this.dragOffsetX = 0;
+    this.dragOffsetY = 0;
+    this.isDragging = false;
 
     this.dragHandler = this.drag.bind(this);
     this.stopDragHandler = this.stopDrag.bind(this);
@@ -19,7 +19,7 @@ class Window {
     if (!this.element) return;
 
     if (this.openTrigger) {
-      this.openTrigger.addEventListener("click", () => this.open());
+      this.openTrigger.addEventListener(this.openEvent, () => this.open());
     }
 
     if (this.closeTrigger) {
@@ -31,6 +31,17 @@ class Window {
 
   open() {
     this.element.style.display = "flex";
+
+    if (this.element.id === "welcome") {
+      this.element.style.left = "50%";
+      this.element.style.top = "50%";
+      this.element.style.transform = "translate(-50%, -50%)";
+      return;
+    }
+
+    this.element.style.left = "220px";
+    this.element.style.top = "120px";
+    this.element.style.transform = "none";
   }
 
   close() {
@@ -38,13 +49,18 @@ class Window {
   }
 
   makeDraggable() {
-    const handle = this.element.querySelector(".header") || this.element;
+    const handle = this.element;
 
     handle.addEventListener("mousedown", (event) => {
-      event.preventDefault();
+      if (event.target.closest(".close")) return;
 
-      this.pos3 = event.clientX;
-      this.pos4 = event.clientY;
+      event.preventDefault();
+      const rect = this.element.getBoundingClientRect();
+      this.dragOffsetX = event.clientX - rect.left;
+      this.dragOffsetY = event.clientY - rect.top;
+      this.isDragging = true;
+      this.element.style.transform = "none";
+      document.body.style.userSelect = "none";
 
       document.addEventListener("mousemove", this.dragHandler);
       document.addEventListener("mouseup", this.stopDragHandler);
@@ -52,25 +68,59 @@ class Window {
   }
 
   drag(event) {
-    event.preventDefault();
+    if (!this.isDragging) return;
 
-    this.pos1 = this.pos3 - event.clientX;
-    this.pos2 = this.pos4 - event.clientY;
-    this.pos3 = event.clientX;
-    this.pos4 = event.clientY;
-
-    this.element.style.top = (this.element.offsetTop - this.pos2) + "px";
-    this.element.style.left = (this.element.offsetLeft - this.pos1) + "px";
+    this.element.style.left = (event.clientX - this.dragOffsetX) + "px";
+    this.element.style.top = (event.clientY - this.dragOffsetY) + "px";
   }
 
   stopDrag() {
+    this.isDragging = false;
+    document.body.style.userSelect = "";
     document.removeEventListener("mousemove", this.dragHandler);
     document.removeEventListener("mouseup", this.stopDragHandler);
   }
 }
 
-const welcomeWindow = new Window("#welcome", "#welcomeopen", ".close");
-const music = new Window("#music","#music", ".close");
+const welcomeWindow = new Window("#welcome", "#welcomeopen", ".close", "click");
+const musicWindow = new Window("#musicWindow", "#music-button", ".close", "dblclick");
+
+welcomeWindow.open();
+
+function makeIconDraggable(icon) {
+  let isDragging = false;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  icon.addEventListener("mousedown", (event) => {
+    event.preventDefault();
+
+    const rect = icon.getBoundingClientRect();
+    offsetX = event.clientX - rect.left;
+    offsetY = event.clientY - rect.top;
+    isDragging = true;
+
+    document.body.style.userSelect = "none";
+    document.addEventListener("mousemove", moveIcon);
+    document.addEventListener("mouseup", stopMovingIcon);
+  });
+
+  function moveIcon(event) {
+    if (!isDragging) return;
+
+    icon.style.left = (event.clientX - offsetX) + "px";
+    icon.style.top = (event.clientY - offsetY) + "px";
+  }
+
+  function stopMovingIcon() {
+    isDragging = false;
+    document.body.style.userSelect = "";
+    document.removeEventListener("mousemove", moveIcon);
+    document.removeEventListener("mouseup", stopMovingIcon);
+  }
+}
+
+makeIconDraggable(document.getElementById("music-button"));
 
 var selectedIcon = null;    
 
