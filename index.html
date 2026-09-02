@@ -43,13 +43,81 @@
     <img src="img/iconamusica.ico" alt="music" class="app" draggable="false" onclick="selectIcon(this)">
       <p class="text">music</p>
     </button>
-<div id="musicWindow" class="window">
+<div id="musicWindow" class="window music-window">
   <div class="header">
     <p class="close">X</p>
   </div>
+  <div class="music-content">
+    <h1>Music</h1>
+    <p>I like lots of different kinds of music!</p>
+    <ul>
+      <li>rap</li>
+      <li>rock</li>
+      <li>indie</li>
+      <li>etc.</li>
+    </ul>
+    <p>I really like music! As a matter of fact, I'm a drummer.</p>
+    <p>Music is a big part of my day. I enjoy discovering new artists, learning rhythms and playing whenever I can.</p>
+    <p>Artists that I listen to:</p>
+    <div class="artist-list">
+      <div class="artist-card">
+        <img src="img/kanye.jpg" alt="Kanye West">
+        <span>Kanye West</span>
+      </div>
+      <div class="artist-card">
+        <img src="img/nayt.jpg" alt="Nayt album cover">
+        <span>Nayt</span>
+      </div>
+      <div class="artist-card">
+        <img src="img/thasup.jpg" alt="Thasup album cover">
+        <span>Thasup</span>
+      </div>
+      <div class="artist-card">
+        <img src="img/MF-doom.jpg" alt="MF DOOM album cover">
+        <span>MF DOOM</span>
+      </div>
+      <div class="artist-card">
+        <img src="img/tameimpala.jpg" alt="Tame Impala album cover">
+        <span>Tame Impala</span>
+      </div>
+    </div>
+  </div>
 </div>
-      <p>img</p>
-      <p>hobby</p>
+      <button id="img-button" class="buttonapp app-image" data-window="imgWindow">
+        <img src="img/img.ico" alt="images" class="app" draggable="false">
+        <p class="text">img</p>
+      </button>
+      <div id="imgWindow" class="window app-window">
+        <div class="header">
+          <p class="close">X</p>
+        </div>
+        <div class="app-content image-content">
+          <h1>Images</h1>
+          <p>A small collection of images I like.</p>
+          <div class="image-grid">
+            <img src="img/buildings_69.png" alt="Buildings">
+            <img src="img/orsopolare.jpg" alt="Orso polare">
+          </div>
+        </div>
+      </div>
+      <button id="hobby-button" class="buttonapp app-hobby" data-window="hobbyWindow">
+        <img src="img/hobby.ico" alt="hobby" class="app" draggable="false">
+        <p class="text">hobby</p>
+      </button>
+      <div id="hobbyWindow" class="window app-window">
+        <div class="header">
+          <p class="close">X</p>
+        </div>
+        <div class="app-content">
+          <h1>Hobby</h1>
+          <p>Things I enjoy in my free time:</p>
+          <ul>
+            <li>playing drums</li>
+            <li>discovering new music</li>
+            <li>being creative</li>
+          </ul>
+        </div>
+      </div>
     </div>
     <script src="javascript/script.js"></script>
     <script>

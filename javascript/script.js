@@ -84,6 +84,8 @@ class Window {
 
 const welcomeWindow = new Window("#welcome", "#welcomeopen", ".close", "click");
 const musicWindow = new Window("#musicWindow", "#music-button", ".close", "dblclick");
+const imgWindow = new Window("#imgWindow", "#img-button", ".close", "dblclick");
+const hobbyWindow = new Window("#hobbyWindow", "#hobby-button", ".close", "dblclick");
 
 welcomeWindow.open();
 
@@ -108,8 +110,19 @@ function makeIconDraggable(icon) {
   function moveIcon(event) {
     if (!isDragging) return;
 
-    icon.style.left = (event.clientX - offsetX) + "px";
-    icon.style.top = (event.clientY - offsetY) + "px";
+    const nextPosition = keepIconInsideDesktop(
+      icon,
+      event.clientX - offsetX,
+      event.clientY - offsetY
+    );
+    const nextLeft = nextPosition.left;
+    const nextTop = nextPosition.top;
+    const moveX = nextLeft - icon.offsetLeft;
+    const moveY = nextTop - icon.offsetTop;
+
+    icon.style.left = nextLeft + "px";
+    icon.style.top = nextTop + "px";
+    pushOverlappingIcons(icon, moveX, moveY);
   }
 
   function stopMovingIcon() {
@@ -120,7 +133,55 @@ function makeIconDraggable(icon) {
   }
 }
 
+function pushOverlappingIcons(activeIcon, moveX, moveY) {
+  const otherIcons = [...document.querySelectorAll(".buttonapp")]
+    .filter((icon) => icon !== activeIcon);
+  const activeRect = activeIcon.getBoundingClientRect();
+
+  otherIcons.forEach((otherIcon) => {
+    const otherRect = otherIcon.getBoundingClientRect();
+    const overlapX = Math.min(activeRect.right, otherRect.right) - Math.max(activeRect.left, otherRect.left);
+    const overlapY = Math.min(activeRect.bottom, otherRect.bottom) - Math.max(activeRect.top, otherRect.top);
+
+    if (overlapX <= 0 || overlapY <= 0) return;
+
+    if (Math.abs(moveX) >= Math.abs(moveY)) {
+      const direction = moveX >= 0 ? 1 : -1;
+      const nextPosition = keepIconInsideDesktop(
+        otherIcon,
+        otherIcon.offsetLeft + direction * overlapX,
+        otherIcon.offsetTop
+      );
+      otherIcon.style.left = nextPosition.left + "px";
+      otherIcon.style.top = nextPosition.top + "px";
+    } else {
+      const direction = moveY >= 0 ? 1 : -1;
+      const nextPosition = keepIconInsideDesktop(
+        otherIcon,
+        otherIcon.offsetLeft,
+        otherIcon.offsetTop + direction * overlapY
+      );
+      otherIcon.style.left = nextPosition.left + "px";
+      otherIcon.style.top = nextPosition.top + "px";
+    }
+  });
+}
+
+function keepIconInsideDesktop(icon, left, top) {
+  const topbar = document.querySelector(".topbar");
+  const minimumTop = (topbar ? topbar.offsetHeight : 0) + 8;
+  const maximumLeft = Math.max(0, window.innerWidth - icon.offsetWidth);
+  const maximumTop = Math.max(minimumTop, window.innerHeight - icon.offsetHeight);
+
+  return {
+    left: Math.min(Math.max(0, left), maximumLeft),
+    top: Math.min(Math.max(minimumTop, top), maximumTop)
+  };
+}
+
 makeIconDraggable(document.getElementById("music-button"));
+makeIconDraggable(document.getElementById("img-button"));
+makeIconDraggable(document.getElementById("hobby-button"));
 
 var selectedIcon = null;    
 
