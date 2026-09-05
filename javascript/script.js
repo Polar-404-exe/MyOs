@@ -8,6 +8,9 @@ class Window {
     this.dragOffsetX = 0;
     this.dragOffsetY = 0;
     this.isDragging = false;
+    this.isMinimized = false;
+    this.taskbarButton = null;
+    this.minimizeButton = this.element ? this.element.querySelector(".minimize") : null;
 
     this.dragHandler = this.drag.bind(this);
     this.stopDragHandler = this.stopDrag.bind(this);
@@ -26,11 +29,18 @@ class Window {
       this.closeTrigger.addEventListener("click", () => this.close());
     }
 
+    this.createTaskbarButton();
+    if (this.minimizeButton) {
+      this.minimizeButton.addEventListener("click", () => this.minimize());
+    }
     this.makeDraggable();
   }
 
   open() {
     this.element.style.display = "flex";
+    this.isMinimized = false;
+    if (!this.taskbarButton) this.createTaskbarButton();
+    this.updateTaskbarButton();
 
     if (this.element.id === "welcome") {
       this.element.style.left = "50%";
@@ -46,13 +56,49 @@ class Window {
 
   close() {
     this.element.style.display = "none";
+    this.isMinimized = false;
+    if (this.taskbarButton) {
+      this.taskbarButton.hidden = true;
+    }
+  }
+
+  minimize() {
+    this.element.style.display = "none";
+    this.isMinimized = true;
+    this.updateTaskbarButton();
+  }
+
+  createTaskbarButton() {
+    const bottomBar = document.querySelector("#bottomBar");
+    if (!bottomBar || !this.openTrigger) return;
+
+    this.taskbarButton = document.createElement("button");
+    this.taskbarButton.className = "taskbar-app";
+    this.taskbarButton.type = "button";
+    this.taskbarButton.hidden = true;
+    this.taskbarButton.textContent = this.openTrigger.querySelector(".text")?.textContent.trim() || this.element.id;
+    this.taskbarButton.addEventListener("click", () => {
+      if (this.isMinimized) {
+        this.open();
+      } else {
+        this.minimize();
+      }
+    });
+    bottomBar.appendChild(this.taskbarButton);
+  }
+
+  updateTaskbarButton() {
+    if (!this.taskbarButton) return;
+
+    this.taskbarButton.hidden = false;
+    this.taskbarButton.classList.toggle("minimized", this.isMinimized);
   }
 
   makeDraggable() {
     const handle = this.element;
 
     handle.addEventListener("mousedown", (event) => {
-      if (event.target.closest(".close")) return;
+      if (event.target.closest(".close, .minimize")) return;
 
       event.preventDefault();
       const rect = this.element.getBoundingClientRect();
@@ -88,6 +134,34 @@ const imgWindow = new Window("#imgWindow", "#img-button", ".close", "dblclick");
 const hobbyWindow = new Window("#hobbyWindow", "#hobby-button", ".close", "dblclick");
 
 welcomeWindow.open();
+
+const creativeButton = document.getElementById("creativeButton");
+
+function dropLightbulbs() {
+  const bulbCount = 12;
+
+  for (let index = 0; index < bulbCount; index += 1) {
+    const bulb = document.createElement("span");
+    bulb.className = "falling-bulb";
+    bulb.textContent = "💡";
+    bulb.style.left = `${Math.random() * 100}vw`;
+    bulb.style.animationDelay = `${Math.random() * 0.45}s`;
+    bulb.style.setProperty("--sway", `${(Math.random() - 0.5) * 180}px`);
+    document.body.appendChild(bulb);
+
+    bulb.addEventListener("animationend", () => bulb.remove(), { once: true });
+  }
+}
+
+if (creativeButton) {
+  creativeButton.addEventListener("click", dropLightbulbs);
+  creativeButton.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      dropLightbulbs();
+    }
+  });
+}
 
 function makeIconDraggable(icon) {
   let isDragging = false;

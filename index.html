@@ -16,7 +16,7 @@
 
       </p>
 
-       <p style="text-align: center; position: absolute;left: 50%; transform: translateX(-50%); white-space: nowrap; background-color: rgba(187, 187, 187, 0.5); padding: 5px 10px; border-radius: 22px; padding-left: 10px; padding-right: 10px;">
+      <p id="creativeButton" role="button" tabindex="0" aria-label="Create a lightbulb effect" style="text-align: center; position: absolute;left: 50%; transform: translateX(-50%); white-space: nowrap; background-color: rgba(187, 187, 187, 0.5); padding: 5px 10px; border-radius: 22px; padding-left: 10px; padding-right: 10px; cursor: pointer;">
 
             Be creative💡
 
@@ -30,21 +30,29 @@
       </p>
       
     </div>
-    <div id="welcome" class="window welcome">
+    <div id="welcome" class="welcome-window">
       <div class="header">
+        <span class="window-title">PolarOS / welcome</span>
+        <button class="minimize" type="button" aria-label="Nascondi finestra">-</button>
         <p style="cursor:pointer" class="close">X</p>
       </div>
-      <h1>Hi welcome to PolarOS</h1>
-      <h2 style="text-align: left; font-family: 'URW Chancery L', cursive; font-weight: 50">PolarOS is a feature-limited OS to answer the unanswerable questions of "who is Polar?"</h2>
+      <div class="welcome-content">
+        <p style="margin: 0; color: #267b56; font-family: 'Comic Sans MS', 'Trebuchet MS', sans-serif; font-size: 0.95rem;">A tiny place on the internet</p>
+        <h1>Hi, welcome to PolarOS</h1>
+        <h2>PolarOS is a small desktop for music, images, hobbies and a few unanswerable questions about who Polar is.</h2>
+        <p style="margin: 0; color: #267b56; font-family: 'Comic Sans MS', 'Trebuchet MS', sans-serif; font-size: 0.95rem;">Have a look around :)</p>
+      </div>
     </div>
     <div id="desktopApps">
     
-    <button id="music-button" class="buttonapp" data-window="musicWindow">
+    <button id="music-button" class="buttonapp" data-window="musicWindow" style="cursor: pointer; ">
     <img src="img/iconamusica.ico" alt="music" class="app" draggable="false" onclick="selectIcon(this)">
       <p class="text">music</p>
     </button>
 <div id="musicWindow" class="window music-window">
   <div class="header">
+    <span class="window-title">PolarOS / music</span>
+    <button class="minimize" type="button" aria-label="Nascondi finestra">-</button>
     <p class="close">X</p>
   </div>
   <div class="music-content">
@@ -83,12 +91,14 @@
     </div>
   </div>
 </div>
-      <button id="img-button" class="buttonapp app-image" data-window="imgWindow">
-        <img src="img/img.ico" alt="images" class="app" draggable="false">
+      <button id="img-button" class="buttonapp app-image" data-window="imgWindow" style="cursor: pointer; ">
+        <img src="img/img.ico" alt="images" class="app" draggable="false" onclick="selectIcon(this)">
         <p class="text">img</p>
       </button>
       <div id="imgWindow" class="window app-window">
         <div class="header">
+          <span class="window-title">PolarOS / images</span>
+          <button class="minimize" type="button" aria-label="Nascondi finestra">-</button>
           <p class="close">X</p>
         </div>
         <div class="app-content image-content">
@@ -100,12 +110,14 @@
           </div>
         </div>
       </div>
-      <button id="hobby-button" class="buttonapp app-hobby" data-window="hobbyWindow">
-        <img src="img/hobby.ico" alt="hobby" class="app" draggable="false">
+      <button id="hobby-button" class="buttonapp app-hobby" data-window="hobbyWindow" style="cursor: pointer; ">
+        <img src="img/hobby.ico" alt="hobby" class="app" draggable="false" onclick="selectIcon(this)">
         <p class="text">hobby</p>
       </button>
       <div id="hobbyWindow" class="window app-window">
         <div class="header">
+          <span class="window-title">PolarOS / hobby</span>
+          <button class="minimize" type="button" aria-label="Nascondi finestra">-</button>
           <p class="close">X</p>
         </div>
         <div class="app-content">
@@ -113,11 +125,15 @@
           <p>Things I enjoy in my free time:</p>
           <ul>
             <li>playing drums</li>
+            <li>coding <ul> <li>JavaScript</li> <li>Python</li> <li>HTML</li> <li>CSS</li> </ul></li>
             <li>discovering new music</li>
             <li>being creative</li>
+            <li>playing video games <ul> <li>Minecraft</li> <li>Overwatch</li> <li>Hollow Knight</li> <li>Rust</li> </ul></li>
           </ul>
         </div>
       </div>
+    </div>
+    <div id="bottomBar" aria-label="Applicazioni aperte">
     </div>
     <script src="javascript/script.js"></script>
     <script>

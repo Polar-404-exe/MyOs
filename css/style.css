@@ -5,22 +5,55 @@ body{
     background-attachment: fixed;
     background-size: cover;
 }
-#welcome {
-    border: solid;
-    width: 360px;
-    height: 200px;
+.falling-bulb {
+    position: fixed;
+    top: -3rem;
+    z-index: 20;
+    pointer-events: none;
+    font-size: 2rem;
+    filter: drop-shadow(0 0 8px rgba(255, 230, 89, 0.9));
+    animation: falling-bulb 2.4s cubic-bezier(0.22, 0.8, 0.35, 1) forwards;
+}
+
+@keyframes falling-bulb {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, -3rem, 0) rotate(-25deg);
+    }
+    12% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translate3d(var(--sway), 110vh, 0) rotate(25deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .falling-bulb {
+        animation-duration: 0.8s;
+    }
+}
+.welcome-window {
+    display: flex;
+    position: absolute;
+    width: min(440px, calc(100vw - 32px));
+    height: min(300px, calc(100vh - 96px));
     box-sizing: border-box;
     flex-direction: column;
-    display: flex;
-    min-height: 0px;
-    padding: 6px;
-    position: absolute;
+    min-height: 0;
+    padding: 10px;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 22px;
-    background-color: rgba(254, 254, 254, 0.5);
-    border-color: rgba(0, 0, 0, 0.646);
+    margin: 0;
+    user-select: none;
+    z-index: 10;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 18px;
+    background: linear-gradient(145deg, rgba(229, 247, 255, 0.78), rgba(116, 164, 210, 0.58));
+    box-shadow: 0 18px 45px rgba(12, 35, 70, 0.35), inset 0 1px rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(14px);
 }
 
 .window {
@@ -201,13 +234,15 @@ body{
     cursor: grabbing;
 }
 
-.welcome h1 {
-    margin: 0 0 1px;
+.welcome-content {
+    padding-top: 18px;
 }
-   
-.welcome h2 {
-    margin: 0;
+
+
+.welcome-window h1 {
+    color: #123d70;
 }
+
 .topbar {
     display: flex;
     background-color: rgba(0, 0, 0, 0.5);
@@ -235,6 +270,27 @@ body{
     border-radius: 22px;
     padding-right: 4px;
     padding-left: 4px;
+}
+
+.minimize {
+    position: absolute;
+    top: 1px;
+    right: 42px;
+    width: 25px;
+    height: 25px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background-color: rgba(190, 255, 243, 0.644);
+    color: rgba(19, 42, 77, 0.9);
+    cursor: pointer;
+    font: inherit;
+    font-size: 20px;
+    line-height: 20px;
+}
+
+.minimize:hover {
+    background-color: rgba(154, 201, 223, 0.8);
 }
 #desktopApps {
     padding-top: 64px;
@@ -302,4 +358,44 @@ body{
     margin: 0;
     position: relative;
     text-align: center;
+}
+
+#bottomBar {
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    align-items: flex-end;
+    align-content: center;
+    align-items: center;
+    width: 50%;
+    height: 50px;
+    padding: 6px 12px;
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    overflow-x: auto;
+    z-index: 20;
+    border-radius: 22px;
+}
+
+.taskbar-app {
+    min-width: 80px;
+    height: 34px;
+    padding: 0 14px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.24);
+    color: white;
+    cursor: pointer;
+    font: inherit;
+}
+
+.taskbar-app:hover,
+.taskbar-app.minimized {
+    background-color: rgba(154, 201, 223, 0.7);
+    color: #102b4b;
 }
