@@ -98,7 +98,7 @@ class Window {
     const handle = this.element;
 
     handle.addEventListener("mousedown", (event) => {
-      if (event.target.closest(".close, .minimize")) return;
+      if (event.target.closest(".close, .minimize, button, input, select, textarea, label")) return;
 
       event.preventDefault();
       const rect = this.element.getBoundingClientRect();
@@ -132,6 +132,124 @@ const welcomeWindow = new Window("#welcome", "#welcomeopen", ".close", "click");
 const musicWindow = new Window("#musicWindow", "#music-button", ".close", "dblclick");
 const imgWindow = new Window("#imgWindow", "#img-button", ".close", "dblclick");
 const hobbyWindow = new Window("#hobbyWindow", "#hobby-button", ".close", "dblclick");
+const spotifyWindow = new Window("#spotifyWindow", "#spotify-button", ".close", "click");
+const timerWindow = new Window("#timerWindow", "#timer-button", ".close", "click");
+
+const timerDisplay = document.getElementById("timerDisplay");
+const timerPhase = document.getElementById("timerPhase");
+const timerCycle = document.getElementById("timerCycle");
+const timerProgress = document.getElementById("timerProgress");
+const timerMinutes = document.getElementById("timerMinutes");
+const breakMinutes = document.getElementById("breakMinutes");
+const timerStart = document.getElementById("timerStart");
+const timerReset = document.getElementById("timerReset");
+let timerMode = "focus";
+let timerCycleNumber = 1;
+let timerSeconds = Number(timerMinutes?.value || 25) * 60;
+let timerTotalSeconds = timerSeconds;
+let timerInterval = null;
+let timerAudioContext = null;
+
+function enableTimerSound() {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return;
+  if (!timerAudioContext) timerAudioContext = new AudioContext();
+  if (timerAudioContext.state === "suspended") timerAudioContext.resume();
+}
+
+function playTimerSound() {
+  if (!timerAudioContext) return;
+  const startTime = timerAudioContext.currentTime;
+  [659.25, 783.99, 987.77].forEach((frequency, index) => {
+    const oscillator = timerAudioContext.createOscillator();
+    const gain = timerAudioContext.createGain();
+    const noteStart = startTime + index * 0.18;
+    oscillator.type = "sine";
+    oscillator.frequency.value = frequency;
+    gain.gain.setValueAtTime(0.0001, noteStart);
+    gain.gain.exponentialRampToValueAtTime(0.22, noteStart + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.0001, noteStart + 0.42);
+    oscillator.connect(gain);
+    gain.connect(timerAudioContext.destination);
+    oscillator.start(noteStart);
+    oscillator.stop(noteStart + 0.45);
+  });
+}
+
+function updateTimerDisplay() {
+  if (!timerDisplay) return;
+  const minutes = Math.floor(timerSeconds / 60).toString().padStart(2, "0");
+  const seconds = (timerSeconds % 60).toString().padStart(2, "0");
+  timerDisplay.textContent = `${minutes}:${seconds}`;
+  if (timerProgress) {
+    timerProgress.style.width = `${Math.max(0, Math.min(100, (timerSeconds / timerTotalSeconds) * 100))}%`;
+  }
+  if (timerPhase) {
+    timerPhase.textContent = timerMode === "focus" ? "Focus time" : "Pausa dolce";
+  }
+  if (timerCycle) timerCycle.textContent = `Pomodoro ${timerCycleNumber} / 4`;
+  if (timerStart) timerStart.textContent = timerInterval
+    ? "Pausa"
+    : timerMode === "focus" ? "Avvia focus" : "Avvia pausa";
+}
+
+function resetTimer() {
+  window.clearInterval(timerInterval);
+  timerInterval = null;
+  timerMode = "focus";
+  timerCycleNumber = 1;
+  timerTotalSeconds = Math.max(1, Number(timerMinutes?.value || 25)) * 60;
+  timerSeconds = timerTotalSeconds;
+  updateTimerDisplay();
+}
+
+function startNextTimerPhase() {
+  timerMode = "focus";
+  timerCycleNumber = timerCycleNumber === 4 ? 1 : timerCycleNumber + 1;
+  const isLongBreak = timerCycleNumber === 1;
+  timerMode = "break";
+  timerTotalSeconds = Math.max(1, Number(breakMinutes?.value || 5)) * (isLongBreak ? 3 : 1) * 60;
+  timerSeconds = timerTotalSeconds;
+  updateTimerDisplay();
+}
+
+function finishTimerPhase() {
+  window.clearInterval(timerInterval);
+  timerInterval = null;
+  playTimerSound();
+  if (timerMode === "focus") startNextTimerPhase();
+  else {
+    timerMode = "focus";
+    timerTotalSeconds = Math.max(1, Number(timerMinutes?.value || 25)) * 60;
+    timerSeconds = timerTotalSeconds;
+  }
+  updateTimerDisplay();
+}
+
+if (timerStart && timerReset && timerMinutes && breakMinutes) {
+  timerStart.addEventListener("click", () => {
+    enableTimerSound();
+    if (timerInterval) {
+      window.clearInterval(timerInterval);
+      timerInterval = null;
+      updateTimerDisplay();
+      return;
+    }
+
+    if (timerSeconds <= 0) resetTimer();
+    timerInterval = window.setInterval(() => {
+      timerSeconds -= 1;
+      updateTimerDisplay();
+      if (timerSeconds <= 0) finishTimerPhase();
+    }, 1000);
+    updateTimerDisplay();
+  });
+
+  timerReset.addEventListener("click", resetTimer);
+  timerMinutes.addEventListener("change", resetTimer);
+  breakMinutes.addEventListener("change", resetTimer);
+  updateTimerDisplay();
+}
 
 welcomeWindow.open();
 

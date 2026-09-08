@@ -131,7 +131,64 @@
             <li>playing video games <ul> <li>Minecraft</li> <li>Overwatch</li> <li>Hollow Knight</li> <li>Rust</li> </ul></li>
           </ul>
         </div>
+        
       </div>
+      <aside id="rightDock" aria-label="Applicazioni rapide">
+        <button class="dock-app" id="spotify-button" type="button" aria-label="Apri Spotify">
+          <img src="img/spotify.ico" alt="">
+          <span>Spotify</span>  
+        </button>
+        <button class="dock-app" id="timer-button" type="button" aria-label="Apri timer">
+          <img src="img/alarm.png" alt="">
+          <span>Timer</span>
+        </button>
+      </aside>
+      <div id="timerWindow" class="window timer-window">
+        <div class="header">
+          <span class="window-title">PolarOS / timer</span>
+          <button class="minimize" type="button" aria-label="Nascondi finestra">-</button>
+          <p class="close">X</p>
+        </div>
+        <div class="timer-content">
+          <div class="timer-heading">
+            <span id="timerPhase" class="timer-phase">Focus time</span>
+            <span id="timerCycle" class="timer-cycle">Pomodoro 1 / 4</span>
+          </div>
+          <div id="timerDisplay" class="timer-display">25:00</div>
+          <div class="timer-progress" aria-hidden="true">
+            <span id="timerProgress"></span>
+          </div>
+          <div class="timer-settings">
+            <label for="timerMinutes">Focus</label>
+            <input id="timerMinutes" type="number" min="1" max="99" value="25">
+            <label for="breakMinutes">Pausa</label>
+            <input id="breakMinutes" type="number" min="1" max="30" value="5">
+          </div>
+          <div class="timer-actions">
+            <button id="timerStart" class="timer-primary" type="button">Avvia focus</button>
+            <button id="timerReset" type="button">Riparti</button>
+          </div>
+          <p class="timer-note">Dopo 4 focus, prenditi una pausa lunga.</p>
+        </div>
+      </div>
+      <div id="spotifyWindow" class="window spotify-window">
+        <div class="header">
+          <span class="window-title">PolarOS / Spotify</span>
+          <button class="minimize" type="button" aria-label="Nascondi finestra">-</button>
+          <p class="close">X</p>
+        </div>
+        <div class="spotify-content">
+          <iframe
+            data-testid="embed-iframe"
+            src="https://open.spotify.com/embed/playlist/6qAsfC3lDWWvEGupEU6IU3?utm_source=generator&si=4692e9a8c0724946"
+            title="Playlist Spotify"
+            allowfullscreen
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy">
+          </iframe>
+        </div>
+      </div>
+
     </div>
     <div id="bottomBar" aria-label="Applicazioni aperte">
     </div>
